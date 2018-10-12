@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+<div id="paypal-button-container"></div>
+<!-- Step 1 Include the Checkout JavaScript on the page: -->
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+<!-- Add the following HTML on the page where you want to render the new PayPal button: -->
+
+<div id="paypal-button"> </div>
+
+<script>
+
+    var paypalLinkElem = document.getElementById("paypal-button-container");
+    paypalLinkElem.style.display = "none";
+    (function () {
+        paypal.Button.render({
+            env: "sandbox", // Or "sandbox",
+            style: {
+                layout: "vertical", // use vertical layout to use the full power payment buttons
+                size: "medium", // medium | large
+                shape: "rect", // pill | rect
+                color: "gold" // gold | blue | silver | black
+            },
+            payment: function (data, actions) {
+                return paypal.request.get("http://localhost:8081/create",
+                    { headers: { "Accept": "application/paypal-json-token", } })
+                    .then(function (response) {
+                        console.log(response);
+                        if (!response || !response.id) {
+                            throw new Error("There was an error fetching the PayPal token");
+                        }
+                        return response.id;
+                    })
+                    .catch(function (err) { throw err; });
+            },
+            onAuthorize: function (data, actions) {
+                return actions.redirect();
+            },
+            onCancel: function (data, actions) {
+                return actions.redirect();
+            },
+            onError: function (error) {
+                // You will want to handle this differently
+                return alert(error);
+            }
+        }, "#paypal-button");
+    })();
+
+</script>
+</body>
+</html>

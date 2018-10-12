@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body onload="getPayment()">
+
+Payment Details
+<div id="shippingaddress">my address</div>
+<label id="amount"></label><br>
+<button id="confirmButton">Complete Payment</button>
+</body>
+<script>
+    var paymentID = window.location.search.substr(1).split('&')[0].split("=")[1];
+    var payerID= window.location.search.substr(1).split('&')[2].split("=")[1];
+function getPayment() {
+
+
+    URL = "http://localhost:8080/getPayment";  //Your URL
+    $(document).ready(function () {
+
+
+        $.ajax({
+            url: URL,
+            data: jQuery.param( {"paymentId": paymentID}),
+        }).then(function (data) {
+            console.log(data);
+            var obj = JSON.parse(data);
+            //$('#shippingaddress').text(obj.transactions[0].itemlist.shippingAddress);
+            $('#amount').text(obj.transactions[0].amount.total);
+        });
+    });
+}
+
+$( "#confirmButton" ).click(function() {
+    alert( "Handler for .click() called." );
+    URL = "http://localhost:8080/execute";  //Your URL
+    $.ajax({
+        url: URL,
+        type: "POST",
+        dataType: "json",
+        data: {"paymentID": paymentID,"payerID":payerID},
+    }).then(function (data) {
+        console.log(data);
+
+        window.alert("Payment sucesss");
+
+/*
+        $('#shippingaddress').append(obj.transactions[0]).itemList.shipping_address;
+        $('#amount').innerText=obj.transactions[0].amount.total;*/
+    });
+});
+</script>
+
+</html>

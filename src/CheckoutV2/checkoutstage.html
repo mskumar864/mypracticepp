@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.paypalobjects.com/api/checkout.js" data-log-level="debug"  data-paypal-checkout data-stage="hermesnodeweb18024653"></script>
+</head>
+
+<body>
+<div id="paypal-button-container"></div>
+
+<script>
+    paypal.Button.render({
+
+        env: 'stage', // sandbox | production
+
+        style: {
+
+            size:   'medium',    // medium | large | responsive
+            shape:  'rect',      // pill | rect
+            color:  'gold'       // gold | blue | silver | black
+        },
+
+
+        // PayPal Client IDs - replace with your own
+        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+        client: {
+            local:      'ARSuIjUeIhD7MjvGd7qAZJRIVvNvUeRn34vfxfI2ZV-JJ9g-tTOSkMNgQQSf1AXnBzrwrTdjjdEaZT41',
+            stage:      'ARSuIjUeIhD7MjvGd7qAZJRIVvNvUeRn34vfxfI2ZV-JJ9g-tTOSkMNgQQSf1AXnBzrwrTdjjdEaZT41'
+        },
+
+        // Show the buyer a 'Pay Now' button in the checkout flow
+
+        // payment() is called when the button is clicked
+        payment: function(data, actions) {
+
+            // Make a call to the REST api to create the payment
+            return actions.order.create({
+                order: {
+                    "intent": "AUTHORIZE",
+
+                    "purchase_units": [
+                        {
+                            "reference_id": "PUHF",
+                            "description": "Sporting Goods",
+
+                            "custom_id": "CUST-HighFashions",
+                            "soft_descriptor": "HighFashions",
+                            "amount": {
+                                "currency_code": "USD",
+                                "value": "230.00",
+                                "breakdown": {
+                                    "item_total": {
+                                        "currency_code": "USD",
+                                        "value": "180.00"
+                                    },
+                                    "shipping": {
+                                        "currency_code": "USD",
+                                        "value": "20.00"
+                                    },
+                                    "handling": {
+                                        "currency_code": "USD",
+                                        "value": "10.00"
+                                    },
+                                    "tax_total": {
+                                        "currency_code": "USD",
+                                        "value": "20.00"
+                                    },
+                                    "gift_wrap": {
+                                        "currency_code": "USD",
+                                        "value": "10.00"
+                                    },
+                                    "shipping_discount": {
+                                        "currency_code": "USD",
+                                        "value": "10"
+                                    }
+                                }
+                            },
+
+                            "items": [
+                                {
+                                    "name": "T-Shirt",
+                                    "description": "Green XL",
+                                    "sku": "sku01",
+                                    "unit_amount": {
+                                        "currency_code": "USD",
+                                        "value": "90.00"
+                                    },
+                                    "tax": {
+                                        "currency_code": "USD",
+                                        "value": "10.00"
+                                    },
+                                    "quantity": "1",
+                                    "category": "PHYSICAL_GOODS"
+                                },
+                                {
+                                    "name": "Shoes",
+                                    "description": "Running, Size 10.5",
+                                    "sku": "sku02",
+                                    "unit_amount": {
+                                        "currency_code": "USD",
+                                        "value": "45.00"
+                                    },
+                                    "tax": {
+                                        "currency_code": "USD",
+                                        "value": "5.00"
+                                    },
+                                    "quantity": "2",
+                                    "category": "PHYSICAL_GOODS"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            });
+        },
+
+        // onAuthorize() is called when the buyer approves the payment
+        onAuthorize: function(data, actions) {
+
+            // Make a call to the REST api to execute the payment
+            return actions.order.get().then(function(data) {
+                console.warn('get order', data);
+
+                return actions.order.authorize().then(function(data) {
+                    console.warn('authorize order',data);
+                });
+            });
+
+        }
+
+    }, '#paypal-button-container');
+
+</script>
+</body>
+
+</html>

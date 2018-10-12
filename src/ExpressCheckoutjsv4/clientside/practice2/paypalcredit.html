@@ -1,0 +1,66 @@
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+<div id="paypal-button-container"></div>
+
+    <script>
+
+    // Render the PayPal button
+
+    paypal.Button.render({
+
+        // Set your environment
+
+        env: 'sandbox', // sandbox | production
+
+        // Specify the style of the button
+
+        style: {
+            layout:'vertical',
+
+            size:  'medium', // small | medium | large | responsive
+            shape: 'rect',  // pill | rect
+
+
+        },
+
+ funding: {
+            allowed: [ paypal.FUNDING.FUNDING, paypal.FUNDING.CREDIT  ]
+
+        },
+
+        // PayPal Client IDs - replace with your own
+        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+
+        client: {
+            sandbox:    'AXLzM1r34m3Sw_krcgbjrg7QcAwNNiaj5y4C-UtrpI4lWaA28dRVXyrsfryCJSQ4_dgdlZ5bNl-9v7L9',
+            production: '<insert production client id>'
+        },
+
+        // Wait for the PayPal button to be clicked
+
+        payment: function(data, actions) {
+
+            // Set up a payment and make credit the landing page
+
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: { total: '0.01', currency: 'USD' }
+                        }
+                    ]
+                }
+            });
+        },
+
+        // Wait for the payment to be authorized by the customer
+
+        onAuthorize: function(data, actions) {
+            return actions.payment.execute().then(function() {
+                window.alert('Payment Complete!');
+            });
+        }
+
+    }, '#paypal-button-container');
+
+        </script>

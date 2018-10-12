@@ -1,0 +1,61 @@
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+<div id="paypal-button-container"></div>
+
+<script>
+
+    // Render the PayPal button
+
+    paypal.Button.render({
+
+        // Set your environment
+
+        env: 'sandbox', // sandbox | production
+
+
+        style: {
+            layout:'vertical',
+            fundingicons:false,
+            size:  'medium',    // small | medium | large | responsive
+            shape: 'pill',     // pill | rect
+        //    color: 'blue' ,     // gold | blue | silver | black
+           maxbuttons:4
+        },
+
+        funding: {
+            allowed: [ paypal.FUNDING.CARD,paypal.FUNDING.CREDIT,paypal.FUNDING.VENMO],
+            disallowed: [ paypal.FUNDING.ELV]
+        },
+
+
+        // PayPal Client IDs - replace with your own
+        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+
+        client: {
+            sandbox:    'AXLzM1r34m3Sw_krcgbjrg7QcAwNNiaj5y4C-UtrpI4lWaA28dRVXyrsfryCJSQ4_dgdlZ5bNl-9v7L9',
+            production: '<insert production client id>'
+        },
+
+        payment: function(data, actions) {
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: { total: '0.01', currency: 'INR' }
+                        }
+                    ]
+                }
+            });
+        },
+
+        onAuthorize: function(data, actions) {
+            return actions.payment.execute().then(function() {
+                window.alert('Payment Complete!');
+            });
+        }
+
+    }, '#paypal-button-container');
+
+</script>
+    

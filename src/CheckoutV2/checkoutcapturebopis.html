@@ -1,0 +1,135 @@
+
+
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+</head>
+
+<body>
+<div id="paypal-button-container"></div>
+<script>
+  paypal.Button.render({
+    env: 'sandbox', // sandbox | production
+
+    style: {
+      label: 'checkout',
+      size: 'medium', // medium | large | responsive
+      shape: 'rect', // pill | rect
+      color: 'gold', // gold | blue | silver | black
+      layout: 'vertical'
+    },
+    //locale: 'de_DE',
+   //  locale: 'nl_NL',
+    // PayPal Client IDs - replace with your own
+    // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+    client: {
+      sandbox: 'ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X'
+      //production: 'PRODUCTION_CLIENT_ID'
+    },
+
+    // Show the customer a 'Pay Now' button in the checkout flow
+    commit: true,
+    funding: {
+            allowed: [ paypal.FUNDING.CARD, paypal.FUNDING.CREDIT,paypal.FUNDING.VENMO ],
+            disallowed: [ ]
+        },
+
+
+    // payment() is called when the button is clicked
+    payment: function(data, actions) {
+      // Make a call to the REST API to create the payment
+      return actions.order.create({
+        order: {
+          "intent": "CAPTURE",
+          "purchase_units": [
+          {
+            "amount": {
+              "currency_code": "USD",
+              "value": "10.00",
+              "breakdown": {
+                "item_total": {
+                  "currency_code": "USD",
+                  "value": "8.00"
+                },
+                "shipping": {
+                  "currency_code": "USD",
+                  "value": "1.00"
+                },
+                "handling": {
+                  "currency_code": "USD",
+                  "value": "1.00"
+                },
+                "tax_total": {
+                  "currency_code": "USD",
+                  "value": "1.00"
+                },
+                "shipping_discount": {
+                  "currency_code": "USD",
+                  "value": "1.00"
+                }
+              }
+            },
+           
+            "items": [
+            {
+              "name": "T-Shirt",
+              "description": "Green XL",
+              "sku": "sku01",
+              "unit_amount": {
+                "currency_code": "USD",
+                "value": "4.00"
+              },
+              "tax": {
+                "currency_code": "USD",
+                "value": "0.5"
+              },
+              "quantity": "1",
+              "category": "PHYSICAL_GOODS"
+            },
+            {
+              "name": "Shoes",
+              "description": "Running, Size 10.5",
+              "sku": "sku02",
+              "unit_amount": {
+                "currency_code": "USD",
+                "value": "4.00"
+              },
+              "tax": {
+                "currency_code": "USD",
+                "value": "0.5"
+              },
+              "quantity": "1",
+              "category": "PHYSICAL_GOODS"
+            }],
+            payer: {
+            shipping_options: [   // Including our Shipping Options
+                {
+                  id: 1,
+                  type: 'SHIP_TO_STORE',
+                  label: 'EXPRESS_PICKUP'
+                }]
+              }
+          }]
+          
+              
+              
+        }
+      });
+    },
+    // onAuthorize() is called when the customer approves the payment
+    onAuthorize: function(data, actions) {
+      // Make a call to the REST api to execute the payment
+      return actions.order.get().then(function(data) {
+        console.warn(data);
+        return actions.order.capture().then(function(data) {
+          console.warn(data);
+        });
+      });
+    }
+  }, '#paypal-button-container');
+
+</script>
+</body>

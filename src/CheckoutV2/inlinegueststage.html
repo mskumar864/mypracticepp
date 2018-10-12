@@ -1,0 +1,101 @@
+<html>
+<head></head>
+<body>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div id="paypal-button"></div>
+<div style="padding-bottom: 1000px;"></div>
+
+<script src="https://hermesnodeweb18015753.qa.paypal.com/webapps/hermes/static/js/checkout.js" data-paypal-checkout data-log-level="debug" data-env="stage" data-stage="hermesnodeweb18015753" data-api-stage="msmaster"></script>
+
+<script>
+  paypal.Button.render({
+
+    // env: 'local', // Optional: specify 'sandbox' environment
+    env: 'stage', // Optional: specify 'sandbox' environment
+
+    locale: 'en_US',
+
+    style: {
+      branding: true, // optional
+      layout: 'vertical',
+      size:  'medium', // small | medium | large | responsive
+      shape: 'rect',   // pill | rect
+      color: 'gold'   // gold | blue | silve | black
+    },
+
+    client: {
+      sandbox: 'AWi18rxt26-hrueMoPZ0tpGEOJnNT4QkiMQst9pYgaQNAfS1FLFxkxQuiaqRBj1vV5PmgHX_jA_c1ncL',
+      stage: 'alc_client1',
+      local: 'alc_client1'
+    },
+
+    payment: function(data, actions) {
+
+      var env    = this.props.env;
+      var client = this.props.client;
+
+      var transactions = [
+        {
+          amount: { total: '3.00', currency: 'USD' },
+          "item_list": {
+            "items": [
+              {
+                "name": "hat",
+                "description": "Brown hat.",
+                "quantity": "1",
+                "price": "3",
+                "sku": "1",
+                "currency": "USD"
+              },
+            ]
+          }
+        },
+      ];
+
+      var payer = {
+        payer_info: {
+          email: "reena-test@pp.com",
+          first_name: "reena",
+          last_name: "singh",
+		  billing_address: {
+            state: "CA",
+            line1: "2702394 Calista Court",
+            city: "San Jose",
+            postal_code: "95111",
+            country_code: "US",
+            phone: "669-215-8030"
+          } ,
+        }
+      }
+
+      return actions.payment.create({
+        payment: {
+          transactions: transactions,
+          payer: payer,
+        }
+      });
+    },
+
+    commit: true, // Optional: show a 'Pay Now' button in the checkout flow
+
+    onAuthorize: function(data, actions) {
+
+      console.log(data, actions);
+      actions.payment.execute().then(function(data) {
+        console.log(data);
+		alert("payment completed");
+        // Show a success page to the buyer
+      });
+    }
+
+  }, '#paypal-button');
+</script>
+<!--
+Update on Inline Testing: Here are the steps to get inline guest work with internal stage. (edited)
+
+1. load checkout.js from the stage https://hermesnodeweb18015753.qa.paypal.com/webapps/hermes/static/js/checkout.js (ignore any certificate error and proceed to load it even if your browser has issues. Make sure you can see the checkout.js script in the browser window. (edited)
+2. load Graphql - similar to above steps https://www.graphqlnodeweb18020235.qa.paypal.com/graphql/
+3. Set an cookie as below. Name of the cookie is "zombo" and value is "1" for .qa.paypal.com domain (edited)
+-->
+</body>
+<html>

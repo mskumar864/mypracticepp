@@ -1,0 +1,75 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Base64/1.0.1/base64.js"></script>
+<div id="paypal-button-container"></div>
+
+<script>
+
+    // Render the PayPal button
+
+    paypal.Button.render({
+
+        // Set your environment
+
+        env: 'sandbox', // sandbox | production
+
+        // Specify the style of the button
+        commit: true,
+        style: {
+            label: 'checkout',
+            size:  'small', // small | medium | large | responsive
+            shape: 'rect',   // pill | rect
+            color: 'gold'   // gold | blue | silver | black
+        },
+
+        // PayPal Client IDs - replace with your own
+        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+
+        client: {
+            sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+            production: '<insert production client id>'
+        },
+
+
+        validate: function(actions) {
+            actions.disable();
+
+        },
+        onClick:function(actions) {
+
+            fetch("https://www.sandbox.paypal.com/v1/oauth2/token", 
+                {"credentials":"include","headers":{"Access-Control-Allow-Origin":"*","Origin" : "https://www.sandbox.paypal.com"},"referrer":"https://www.sandbox.paypal.com/webapps/hermes/button?env=sandbox&commit=1&sessionID=e6456312c6_ga4dunbvhi2dm&buttonSessionID=aa56650096_ga4dunbvhi2dm&funding.disallowed=venmo&funding.remembered=paypal&locale.x=en_US&style.color=gold&style.shape=pill&style.size=small&style.label=checkout&style.fundingicons=false&logLevel=warn&uid=03dfc67479&version=4&xcomponent=1","referrerPolicy":"no-referrer-when-downgrade",
+                "body":"grant_type=client_credentials",
+                "method":"POST","mode":"cors"}
+            ).then(res => res.json())
+            .then(data => {console.log("vadata");console.log(data)})
+            .catch(console.log);
+           // window.location="http://localhost:8080/createFullPage";
+
+     
+    
+    },
+        // Wait for the PayPal button to be clicked
+
+        payment: function(data, actions) {
+
+
+        },  
+
+
+        // Wait for the payment to be authorized by the customer
+
+        onAuthorize: function(data, actions) {
+        console.log("authorized sucesss");
+            windows.alert("authroized");
+        },
+        onCancel: function(data,actions){
+
+
+        }
+
+    }, '#paypal-button-container');
+
+
+
+</script>
