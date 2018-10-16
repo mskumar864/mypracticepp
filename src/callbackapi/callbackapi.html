@@ -1,0 +1,102 @@
+<html>
+<head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://www.paypalobjects.com/api/checkout.js" data-paypal-checkout data-stage="hermesnodeweb18113110" data-api-stage="api.msmaster"></script>
+</head>
+    
+<body>
+        <div id="paypal-button"></div>
+    
+        <script>
+            const Item = {
+                name: 'Hat',
+                description: 'A brown hat with some flair!',
+                sku: '8R0WNH4T',
+                price: '3.00'
+            };
+            paypal.Button.render({
+                env: 'stage',
+                client: {
+                stage: 'Ac_vxBFnnwOd4RLLlDDsMgvxPUVep3obT7C5REnbSb-WDXbMAdQdN3MSTavWsPw0bPIatH_NQyTGv0F3'
+                   // sandbox: 'ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X'
+                },
+                payment: function(data, actions) { 
+                    return actions.payment.create({
+                        payment: {
+                            transactions: [
+                                {
+                                    amount: {
+                                        total: Item.price,
+                                        currency: 'USD'
+                                    },
+                                    item_list: {
+                                        items: [
+                                            {
+                                                name: Item.name,
+                                                description: Item.description,
+                                                price: Item.price,
+                                                sku: Item.sku,
+                                                quantity: '1',
+                                                currency: 'USD'
+                                            },
+                                        ],
+                                    }
+                                },
+                            ],
+                        },
+                        experience: {
+                            flow_config: {
+                                landing_page_type: 'billing' 
+                            } 
+                        }
+                    });
+                },
+                onShippingChange: function(data, actions) {
+                    // Patch cart shipping cost with amount
+                    function patchShippingCost(amount) { 
+                        const parsedPrice = parseFloat(Item.price);
+                        const parsedShipping = parseFloat(amount);
+                        const total = (parsedPrice + parsedShipping).toString();
+                        return actions.payment.patch([
+                            {
+                                op: 'replace',
+                                path: '/transactions/0/amount',
+                                value: {
+                                    total,
+                                    currency: 'USD',
+                                    details: {
+                                        subtotal: Item.price,
+                                        shipping: amount
+                                    }
+                                }
+                            }
+                        ]);
+                    };
+                    // We don't ship outside of the USA.
+                    if (data.country !== 'US') {
+                        return actions.reject();
+                    }
+                    // Free shipping to CA
+                    if (data.state == 'CA') {
+                        const shipping = data.amounts.shipping;
+                        // If there are existing shipping costs, patch the cart and remove then
+                        if (shipping && shipping.amount && parseFloat(shipping.amount) !== 0) {
+                            return patchShippingCost('0.00');
+                        }
+                        // Otherwise just pass through
+                        return actions.resolve();
+                    }
+                    // Otherwise we have a flat shipping cost.
+                    return patchShippingCost('5.00');
+                },
+                onAuthorize: function(data, actions) {
+                    return actions.payment.execute().then(() => {
+                        alert('Payment went through!');
+                        document.location.reload();
+                    });
+                }
+            }, '#paypal-button');
+        </script>
+    </body>
+    </html>

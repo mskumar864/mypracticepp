@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <script
-    src="https://www.paypal.com/sdk/js?client-id=ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X&env=production&order-currency=USD&order-commit=true&order-vault=true&order-intent=capture&debug=true">
+    src="https://www.paypal.com/sdk/js?client-id=ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X&env=production&order-currency=GBP&order-commit=true&order-vault=true&order-intent=authorize&debug=true">
   </script>
 </head>
 <body>
@@ -17,7 +17,7 @@
       return actions.order.create({
         purchase_units: [{
           amount: {
-            value: '0.01'
+            value: '0.05'
           }
         }]
       });
