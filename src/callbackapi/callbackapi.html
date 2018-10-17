@@ -13,15 +13,16 @@
                 name: 'Hat',
                 description: 'A brown hat with some flair!',
                 sku: '8R0WNH4T',
-                price: '3.00'
+                price: '0.01'
             };
             paypal.Button.render({
                 env: 'stage',
                 client: {
-                stage: 'AZFgblJMf5I9_s0YsmiSi1HeXp7IiH9XEVzHvWSqcQkmSspbAyuZNR0YGOtdaXBcYrJzAK9LVU95aaX_'
+                stage: 'AdfyUAiHWYFS9fWRkDrY1UEBlR1N1FJSBPT0_m3VKYfbqLnT1Kc6bDRkNoNZ_y4DhzVh59GYlRwHEA1j'
                    // sandbox: 'ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X'
                 },
                 payment: function(data, actions) { 
+                    console.log(data);
                     return actions.payment.create({
                         payment: {
                             transactions: [
@@ -53,8 +54,10 @@
                     });
                 },
                 onShippingChange: function(data, actions) {
+                    console.log("inside onShippingChange");
                     // Patch cart shipping cost with amount
                     function patchShippingCost(amount) { 
+                        console.log("inside patchShippingCost");
                         const parsedPrice = parseFloat(Item.price);
                         const parsedShipping = parseFloat(amount);
                         const total = (parsedPrice + parsedShipping).toString();
@@ -70,6 +73,7 @@
                                         shipping: amount
                                     }
                                 }
+
                             }
                         ]);
                     };
@@ -88,11 +92,12 @@
                         return actions.resolve();
                     }
                     // Otherwise we have a flat shipping cost.
-                    return patchShippingCost('5.00');
+                    return patchShippingCost('0.02');
                 },
                 onAuthorize: function(data, actions) {
                     return actions.payment.execute().then(() => {
                         alert('Payment went through!');
+                        console.log(data);
                         document.location.reload();
                     });
                 }
