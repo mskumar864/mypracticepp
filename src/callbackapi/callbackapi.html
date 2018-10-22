@@ -19,7 +19,7 @@
                 env: 'stage',
                 client: {
                 stage: 'AdfyUAiHWYFS9fWRkDrY1UEBlR1N1FJSBPT0_m3VKYfbqLnT1Kc6bDRkNoNZ_y4DhzVh59GYlRwHEA1j'
-                   // sandbox: 'ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X'
+                //sandbox: 'ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X'
                 },
                 payment: function(data, actions) { 
                     console.log(data);
@@ -42,7 +42,17 @@
                                                 currency: 'USD'
                                             },
                                         ],
-                                    }
+                                         shipping_address: {
+          recipient_name: 'Brian Robinson',
+          line1: '4th Floor',
+          line2: 'Unit #34',
+          city: 'San Jose',
+          country_code: 'US',
+          postal_code: '95131',
+          phone: '011862212345678',
+          state: 'CA'
+        }
+                                    },
                                 },
                             ],
                         },
@@ -77,6 +87,7 @@
                             }
                         ]);
                     };
+                    return actions.reject();
                     // We don't ship outside of the USA.
                     if (data.country !== 'US') {
                         return actions.reject();
