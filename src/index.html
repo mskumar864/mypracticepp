@@ -8,18 +8,16 @@
         <input type="button"  onclick="RedirectSuccess();" name="ok" id="successButton" value="Continue"  />
 <script>
 //function RedirectSuccess(){
-
- // window.location="http://org.chromium.customtabsdemos";
- var url_string =  window.location.href;
+   var url_string =  window.location.href;
 var url = new URL(url_string);
-var p1 = url.searchParams.get("merchantIdInPayPal");
-var p2=url.searchParams.get("isEmailConfirmed");
-var p3=url.searchParams.get("permissionsGranted");
+var paymentID = url.searchParams.get("paymentID");
+var PayerID=url.searchParams.get("PayerID");
+
 
 //console.log(c);
- window.location="app://org.chromium.customtabsdemos?param1="+p1+"&param2="+p2+"&param3="+p3;
-//window.location="org.chromium.customtabsdemos?param1=suresh&param2=kumar";
-//}
+ //window.location="app://org.chromium.customtabsdemos?param1="+p1+"&param2="+p2+"&param3="+p3;
+ window.location="app://org.chromium.customtabsdemos?paymentID="+paymentID+"&PayerID="+PayerID;
+
 
 
 </script>
