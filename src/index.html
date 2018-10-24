@@ -7,7 +7,7 @@
 
         <input type="button"  onclick="RedirectSuccess();" name="ok" id="successButton" value="Continue"  />
 <script>
-//function RedirectSuccess(){
+function RedirectSuccess(){
    var url_string =  window.location.href;
 var url = new URL(url_string);
 var paymentID = url.searchParams.get("paymentID");
@@ -17,7 +17,10 @@ var PayerID=url.searchParams.get("PayerID");
 //console.log(c);
  //window.location="app://org.chromium.customtabsdemos?param1="+p1+"&param2="+p2+"&param3="+p3;
  window.location="app://org.chromium.customtabsdemos?paymentID="+paymentID+"&PayerID="+PayerID;
-
+}
+setTimeout(()=>{
+        document.getElementById("successButton").click();
+},100);
 
 
 </script>
