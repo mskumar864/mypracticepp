@@ -8,6 +8,7 @@
         <input type="button"  onclick="RedirectSuccess();" name="ok" id="successButton" value="Continue"  />
 <script>
 function RedirectSuccess(){
+        console.log("doing vada");
    var url_string =  window.location.href;
 var url = new URL(url_string);
 var paymentID = url.searchParams.get("paymentID");
@@ -18,10 +19,14 @@ var PayerID=url.searchParams.get("PayerID");
  //window.location="app://org.chromium.customtabsdemos?param1="+p1+"&param2="+p2+"&param3="+p3;
  window.location="app://org.chromium.customtabsdemos?paymentID="+paymentID+"&PayerID="+PayerID;
 }
-setTimeout(()=>{
-        document.getElementById("successButton").click();
-},100);
 
+window.onload = function() {
+ 
+setTimeout(()=>{
+ console.log("callig vada");
+        document.getElementById("successButton").click();
+},1000);
+}
 
 </script>
 
