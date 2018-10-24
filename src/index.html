@@ -39,7 +39,7 @@ var paymentID = url.searchParams.get("paymentID");
 var PayerID=url.searchParams.get("PayerID");
        
   $('#oauth').attr('href', "app://org.chromium.customtabsdemos?paymentID="+paymentID+"&PayerID="+PayerID);
-
+  $('#oauth')[0].click();
 });
 </script>
 
