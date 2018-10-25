@@ -1,9 +1,9 @@
 [{
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "org.chromium.customtabsdemos",
-      "sha256_cert_fingerprints":
-      ["CF:BC:9C:44:E9:0B:11:6A:63:AB:2C:89:0F:25:88:B3:A5:E9:3F:A8:5A:B0:EC:B7:8A:14:CE:75:B2:0D:90:EE"]
-    }
-  }]
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "org.chromium.customtabsclient.example",
+    "sha256_cert_fingerprints":
+    ["CF:BC:9C:44:E9:0B:11:6A:63:AB:2C:89:0F:25:88:B3:A5:E9:3F:A8:5A:B0:EC:B7:8A:14:CE:75:B2:0D:90:EE"]
+  }
+}]
