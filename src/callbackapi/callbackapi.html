@@ -1,9 +1,9 @@
 <html>
 <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://www.paypalobjects.com/api/checkout.js" data-paypal-checkout data-stage="hermesnodeweb18113110" data-api-stage="api.msmaster"></script>
-</head>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>  
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
     
 <body>
         <div id="paypal-button"></div>
@@ -13,12 +13,12 @@
                 name: 'Hat',
                 description: 'A brown hat with some flair!',
                 sku: '8R0WNH4T',
-                price: '0.01'
+                price: '1'
             };
             paypal.Button.render({
-                env: 'stage',
+                env: 'sandbox',
                 client: {
-                stage: 'AdfyUAiHWYFS9fWRkDrY1UEBlR1N1FJSBPT0_m3VKYfbqLnT1Kc6bDRkNoNZ_y4DhzVh59GYlRwHEA1j'
+                    sandbox: 'AY5u6ALS8wSiidBDeDC2d07hxdzv__YgXiO8I_l_U1E0wZ3rx4oUqSvpPZiFgbSTTie_OmC-kqSAgvFv'
                 //sandbox: 'ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X'
                 },
                 payment: function(data, actions) { 
@@ -41,17 +41,7 @@
                                                 quantity: '1',
                                                 currency: 'USD'
                                             },
-                                        ],
-                                         shipping_address: {
-          recipient_name: 'Brian Robinson',
-          line1: '4th Floor',
-          line2: 'Unit #34',
-          city: 'San Jose',
-          country_code: 'US',
-          postal_code: '95131',
-          phone: '011862212345678',
-          state: 'CA'
-        }
+                                        ]
                                     },
                                 },
                             ],
@@ -87,17 +77,31 @@
                             }
                         ]);
                     };
-                    return actions.reject();
+                 //return actions.reject();
                     // We don't ship outside of the USA.
                     if (data.country !== 'US') {
                         return actions.reject();
                     }
+
+                    if (data.state != 'CA') {
+                        const shipping = data.amounts.shipping;
+                        console.log("non CA came")
+                        // If there are existing shipping costs, patch the cart and remove then
+                        if (true || shipping && shipping.amount && parseFloat(shipping.amount) !== 0) {
+                            console.log("change shippin")
+                            return patchShippingCost('5.00');
+                        }
+                        // Otherwise just pass through
+                        return actions.resolve();
+                    }
                     // Free shipping to CA
                     if (data.state == 'CA') {
                         const shipping = data.amounts.shipping;
+                        console.log("CA came")
                         // If there are existing shipping costs, patch the cart and remove then
-                        if (shipping && shipping.amount && parseFloat(shipping.amount) !== 0) {
-                            return patchShippingCost('0.00');
+                        if (true || shipping && shipping.amount && parseFloat(shipping.amount) !== 0) {
+                            console.log("change shippin")
+                            return patchShippingCost('0.05');
                         }
                         // Otherwise just pass through
                         return actions.resolve();
