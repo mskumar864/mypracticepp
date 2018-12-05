@@ -12,6 +12,12 @@ app.post("/phpexecute",function(request,response){
 app.listen(process.env.PORT || 4000, function(){
     console.log("sd");
 })
+
+app.get("/buyingstuff",function(request,response){
+
+response.end("hello this is my shopping website");
+})
+
 app.get("/createba",function(request,response){
     console.log("createba");
 
