@@ -13,12 +13,27 @@
     paypal.Button.render({
 
         env: 'sandbox', // sandbox | production
+        style: {
+          
+         layout: 'vertical',  // horizontal | vertical
+       // branding:true,
+            //size:   'medium',    // medium | large | responsive
+            //shape:  'pill',      // pill | rect
+           // color:  'gold'  ,     // gold | blue | silver | black
+           // fundingicons:true,
+           // maxbuttons:3,
+            //  tagline: true
+        },
 
         // PayPal Client IDs - replace with your own
         // Create a PayPal app: https://developer.paypal.com/developer/applications/create
         client: {
             sandbox:    'ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X',
             production: '<insert production client id>'
+        },
+        funding: {
+            allowed: [ paypal.FUNDING.CARD,paypal.FUNDING.CREDIT],
+            disallowed: [ paypal.FUNDING.ELV]
         },
 
         // Show the buyer a 'Pay Now' button in the checkout flow
