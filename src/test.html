@@ -1,0 +1,101 @@
+<html>
+<head>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+</head>
+<body>
+
+<div id="paypal-button-container"></div>
+<script>
+// Render the PayPal button
+
+var shippingAddress = {
+    "recipient_name": "Hello World",
+    "line1": "Badensche StraÃŸe 24",
+    "line2": "",
+    "city": "Netherland",
+    "postal_code": "1000 AP",
+    "phone": "612345678",
+    "state": "Wilmersdorf",
+    "country_code": "NL"
+}
+var isDigitalGoods = false;
+
+paypal.Button.render({
+    "env": "sandbox",
+    "locale": "nl_NL",
+    "style": {
+        "layout": "vertical",
+        "size": "medium",
+        "shape": "rect",
+        "color": "gold"
+    },
+    "funding": {
+        "allowed": [
+            "ideal"
+        ],
+        "disallowed": [],
+        "remembered": []
+    },
+    "client": {
+        "sandbox": "Aa1R1_o449RmdnQCPwULB6S97TOJGcWSgVF9jOlvr6Jo8jgDmIhHZ3O6YMFuQVnU-BmtOf5dTNMJBezH",
+        "production": "<insert production client id>"
+    },
+    "payment": function (data, actions) {
+
+                        return actions.payment.create({
+                            payment: {
+                                transactions: [{
+                                amount: {
+                                    total: '3.00',
+                                    currency: 'EUR'
+                                },
+                                "item_list": {
+                                    shipping_address : shippingAddress,
+                                    "items":[
+                                        {
+                                            "name":"APM Testing",
+                                            "description":"",
+                                            "quantity":"1",
+                                            "price":"3.00",
+                                            "tax":"0.00",
+                                            "sku":"1",
+                                            "currency":"EUR"
+                                        }
+                                    ],
+                                }
+                                }],
+                                payer : {
+                                    payer_info: {
+                                      "email" : "apm_test_arvind@test.com",
+                                    }
+                                }
+                            },
+    
+                            experience: {
+                                input_fields: {
+                                    no_shipping: isDigitalGoods ? 1 : 2,
+                                    address_override: 0
+                            
+                                }
+                            }
+                        
+                        });
+                    },
+    "onAuthorize": function (data, actions) {
+                    return actions.payment.execute().then(function (details) {
+                        console.log("payment done ",details);
+                        window.alert('Payment Complete!');
+                    });
+                },
+    "onCancel": function() {
+                    alert("User cancelled the payment");
+                },
+    "onError": function(err) {
+                    alert("Some error occurred "+ JSON.stringify(err));
+                },
+    "commit": true
+}, '#paypal-button-container');
+</script>
+
+</body>
+</html>

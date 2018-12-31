@@ -15,16 +15,17 @@
         // Specify the style of the button
 
         style: {
-            label:'buynow',
-         layout: 'horizontal',  // horizontal | vertical
-        branding:true,
-            size:   'medium',    // medium | large | responsive
-            shape:  'pill',      // pill | rect
+           // label:'buynow',
+         layout: 'vertical',  // horizontal | vertical
+       // branding:true,
+          //  size:   'medium',    // medium | large | responsive
+         //   shape:  'pill',      // pill | rect
            // color:  'gold'  ,     // gold | blue | silver | black
-            fundingicons:true,
-           // maxbuttons:3,
+            //fundingicons:true,
+           maxbuttons:4,
             //  tagline: true
         },
+        //locale:'en_US',
 
         // Specify allowed and disallowed funding sources
         //
@@ -34,8 +35,8 @@
         // - paypal.FUNDING.ELV
 
               funding: {
-            allowed: [ paypal.FUNDING.CARD,paypal.FUNDING.CREDIT],
-            disallowed: [ paypal.FUNDING.ELV]
+            allowed: [ paypal.FUNDING.CARD,paypal.FUNDING.VENMO,paypal.FUNDING.ELV],
+            disallowed: []
         },
 
         // PayPal Client IDs - replace with your own

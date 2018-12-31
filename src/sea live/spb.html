@@ -21,7 +21,7 @@
         env: 'production', // sandbox | production
 
 commit: true, // Show a 'Pay Now' button
-locale: 'nl_NL', 
+locale: 'ja_JP', 
 
         // Specify the style of the button
 
@@ -36,8 +36,8 @@ locale: 'nl_NL',
         //
 
         funding: {
-            allowed: [  paypal.FUNDING.IDEAL ],
-            disallowed: [ paypal.FUNDING.CARD,paypal.FUNDING.EPS, paypal.FUNDING.BANCONTACT, paypal.FUNDING.GIROPAY, paypal.FUNDING.MYBANK, paypal.FUNDING.ELV]
+            allowed: [  paypal.FUNDING.CARD,paypal.FUNDING.IDEAL ,paypal.FUNDING.VENMO],
+            disallowed: [  paypal.FUNDING.EPS, paypal.FUNDING.BANCONTACT, paypal.FUNDING.GIROPAY, paypal.FUNDING.MYBANK]
         },
 
         // PayPal Client IDs - replace with your own
@@ -53,7 +53,7 @@ locale: 'nl_NL',
                 payment: {
                     transactions: [
                         {
-                            amount: { total: '1', currency: 'EUR' }
+                            amount: { total: '1', currency: 'USD' }
                         }
                     ]
                 }

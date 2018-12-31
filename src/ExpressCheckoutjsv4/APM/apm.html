@@ -2,7 +2,7 @@
 <head><title>APM demo</title>
     <script src="https://www.paypalobjects.com/api/checkout.js"></script></head>
 <body>
-        <div id="paypal-button-container"></div>
+        <div id="paypal-button"></div>
         <script>
                 // Render the PayPal button
                 paypal.Button.render({
@@ -21,12 +21,12 @@
                  
                     // Modify locale as needed in order to test various payment methods.
                     // If this is omitted, the locale will be determined by your browser.
-                    locale: 'de_DE',
+                    
                              
                     // Specify the style of the button
                     style: {
                         layout: 'vertical',
-                        commit: 'true'
+                        commit: 'false'
                     },
                  
                     funding: {
@@ -38,9 +38,9 @@
                             paypal.FUNDING.BANCONTACT, //Belgium
                             paypal.FUNDING.GIROPAY, //Germany
                             paypal.FUNDING.MYBANK, //Italy,
-                            paypal.FUNDING.CARD,paypal.FUNDING.CREDIT
+                            paypal.FUNDING.CARD
                         ],
-                        disallowed: []
+                        disallowed: [paypal.FUNDING.CREDIT]
                     },
                          
                     payment: function (data, actions) {
@@ -62,8 +62,15 @@
                         return actions.payment.execute().then(function () {
                             window.alert('Payment Complete!');
                         });
-                    }
-                }, '#paypal-button-container');
+                    },
+                    onCancel:function(data,actions){
+                      window.alert("cancelleted clicked");
+        
+                       },
+                 onError:function(err){
+                   console.log(err);
+                }
+                }, '#paypal-button');
                 </script>
     </body>
     </html>

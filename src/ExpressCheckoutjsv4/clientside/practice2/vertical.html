@@ -1,7 +1,7 @@
 
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
-<div id="paypal-button-container"></div>
+<div id="paypal-button"></div>
 
 <script>
 
@@ -16,16 +16,15 @@
 
         style: {
             layout:'vertical',
-            fundingicons:false,
             size:  'medium',    // small | medium | large | responsive
-            shape: 'pill',     // pill | rect
-        //    color: 'blue' ,     // gold | blue | silver | black
-           maxbuttons:4
+           shape: 'rect',     // pill | rect
+            color: 'gold'     // gold | blue | silver | black
+
         },
 
         funding: {
             allowed: [ paypal.FUNDING.CARD,paypal.FUNDING.CREDIT,paypal.FUNDING.VENMO],
-            disallowed: [ paypal.FUNDING.ELV]
+            disallowed: [ paypal.FUNDING.CREDIT]
         },
 
 
@@ -53,6 +52,13 @@
             return actions.payment.execute().then(function() {
                 window.alert('Payment Complete!');
             });
+        },
+        onCancel:function(data,actions){
+            window.alert("cancelleted clicked");
+        
+        },
+        onError:function(err){
+            console.log(err);
         }
 
     }, '#paypal-button-container');
