@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>PayPal Demo Portal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<div class="container">
+        <div class="row">
+
+            <div class="col-xs-12 col-md-8 col-lg-8 col-sm-12 col-md-offset-4  col-lg-offset-4" style="margin-top:6%">
+                <div style="margin-bottom:2%">Buy item for 1 INR.</div>
+                <div id="paypal-button-container"></div>
+                <div>Users are advised to read the <a href="https://www.paypal-community.com" target="_blank">terms and conditions</a> carefully</div>
+            </div>
+        </div>
+</div>
+<script>
+
+    // Render the PayPal button
+
+    paypal.Button.render({
+
+        // Set your environment
+
+        env: 'sandbox', // sandbox | production
+      //  locale: 'en_US',
+        // Specify the style of the button
+
+        style: {
+           // label:'buynow',
+         layout: 'vertical',  // horizontal | vertical
+       // branding:true,
+             size:   'medium',    // medium | large | responsive
+         //   shape:  'pill',      // pill | rect
+           color:  'gold'  ,     // gold | blue | silver | black
+            //fundingicons:true,
+          // maxbuttons:4,
+            //  tagline: true
+        },
+        //locale:'en_US',
+        commit: true,
+        // Specify allowed and disallowed funding sources
+        //
+        // Options:
+        // - paypal.FUNDING.CARD
+        // - paypal.FUNDING.CREDIT
+        // - paypal.FUNDING.ELV
+
+              funding: {
+            allowed: [ paypal.FUNDING.CARD],
+            disallowed: [paypal.FUNDING.CREDIT]
+        },
+
+        // PayPal Client IDs - replace with your own
+        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+
+        client: {
+            sandbox:    'ATwXFTUsC0G1aij_4EK6WEzr_8cd8kfFRHkJxwtNyLQ4yZsEk2p9HXzNNcZ1Xyrc1irtscu2XPIwaSaq',
+            production: 'AXd4MAn4dM8Bb6YBKaySCyLqgr19sqeDu5fZfaW0DlFGVGThEas1txg5VA1t-N2Sba3IRw9FbCbNYREc'
+        },
+
+        payment: function(data, actions) {
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: { total: '1', currency: 'INR' },
+                            item_list: {
+                                items: [
+                         {
+                                 "name": "hat",
+                                    "description": "Brown hat.",
+                                     "quantity": "1",
+                                    "price": "1",
+                                     "tax": "0.00",
+                                     "sku": "1",
+                                    "currency": "INR"
+          }
+          
+        ]
+      }
+                        }
+                    ]
+                }
+            });
+        },
+
+        onAuthorize: function(data, actions) {
+            return actions.payment.execute().then(function() {
+                window.alert('Payment Complete!');
+            });
+        }
+
+    }, '#paypal-button-container');
+
+</script>
+
+</body></html>
