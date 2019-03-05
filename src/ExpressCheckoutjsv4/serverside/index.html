@@ -83,7 +83,7 @@ body {
 
             // Set up a url on your server to create the payment
         var CREATE_URL = '/create';
-          var CREATE_URL = 'http://localhost:4000/createsandbox';
+          var CREATE_URL = 'http://mypracticepp.herokuapp.com/createsandbox';
         // Make a call to your server to set up the payment
         return paypal.request.get(CREATE_URL)
             .then(function(res) {
@@ -107,7 +107,7 @@ body {
 
                         // Make a call to your server to execute the payment
                         // return paypal.request.post("http://localhost:8081/execute", data)
-                        return paypal.request.post("http://localhost:4000/execute", data)
+                        return paypal.request.post("http://mypracticepp.herokuapp.com/execute", data)
                             .then(function (res) {
 
 
