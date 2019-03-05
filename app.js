@@ -406,7 +406,10 @@ app.get('/create', function(req, res, next) {
 });
 
 app.post('/execute', function(req, res, next) {
+
+    
     try{
+        
         console.log(req);
         var payLoad = req.body;
 
@@ -416,6 +419,37 @@ console.log(payLoad);
             var _dataToSend = {
                 "payer_id": payLoad.payerID
             }
+
+            
+    console.log("entering /accesstoken");
+    try{
+    var options = {
+        method: 'POST',
+        url: 'https://api.sandbox.paypal.com/v1/oauth2/token',
+        headers : {
+            'authorization': "Basic "+basicAuth,
+            'accept': "application/json",
+            'accept-language': "en_US",
+            'cache-control': "no-cache",
+            'content-type': "application/x-www-form-urlencoded",
+
+        },
+        body: 'grant_type=client_credentials&response_type=token&return_authn_schemes=true'
+
+    }
+        console.log("kumar");
+    request(options, function (error, response, body) {
+        console.log("Suresh");
+        if (error) {
+            console.log("error");
+            throw new Error(error);
+            return res.send(JSON.stringify(error));
+        }
+        else{
+            console.log(body);
+            accessToken=JSON.parse(body).access_token;
+           //res.send(JSON.parse(body).access_token);
+
             var options = {
                 method: 'POST',
                 url:  "https://api.sandbox.paypal.com/v1/payments/payment/{payment_id}/execute/".replace('{payment_id}', payLoad.paymentID),
@@ -439,9 +473,15 @@ console.log(payLoad);
                     res.send(body);
                 }
             });
+        }
+    });
 
 
     }catch(e) {
         console.log(e)
     }
+}
+catch(e) {
+    console.log(e)
+}
 });
