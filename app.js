@@ -257,7 +257,7 @@ app.get('/create', function(req, res, next) {
     try{
     var options = {
         method: 'POST',
-        url: 'https://api.paypal.com/v1/oauth2/token',
+        url: 'https://api.sandbox.paypal.com/v1/oauth2/token',
         headers : {
             'authorization': "Basic "+basicAuth,
             'accept': "application/json",
@@ -358,7 +358,7 @@ app.get('/create', function(req, res, next) {
     
                 var options = {
                     method: 'POST',
-                    url: 'https://api.paypal.com/v1/payments/payment',
+                    url: 'https://api.sandbox.paypal.com/v1/payments/payment',
                     headers : {
                         'content-type': "application/json",
                         'authorization': "Bearer "+accessToken,
@@ -375,9 +375,14 @@ app.get('/create', function(req, res, next) {
                     }
                     else{
                         setTimeout(()=>{
-                            res.send(body);
+                           
+                            var link=body.links[1].href;
+                         res.send(link.substr(link.search('EC-'),link.length));
+                           
+                            //res.send(body);
+
       
-                        },15000)    
+                        },10)    
                 }
                 });
     
@@ -411,7 +416,7 @@ console.log(payLoad);
             }
             var options = {
                 method: 'POST',
-                url:  "https://api.paypal.com/v1/payments/payment/{payment_id}/execute/".replace('{payment_id}', payLoad.paymentID),
+                url:  "https://api.sandbox.paypal.com/v1/payments/payment/{payment_id}/execute/".replace('{payment_id}', payLoad.paymentID),
                 headers : {
                     'content-type': "application/json",
                     'authorization': "Bearer "+accessToken,
