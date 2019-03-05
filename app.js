@@ -305,7 +305,7 @@ app.get('/create', function(req, res, next) {
                         },
                         "description": "The payment transaction description.",
                         "custom": "EBAY_EMS_90048630024435",
-                        "invoice_number": "4878723231589673",
+                       // "invoice_number": "4878723231589673",
                         "payment_options": {
                             "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
                         },
@@ -381,7 +381,7 @@ app.get('/create', function(req, res, next) {
                             var link=body.links[1].href;
                          res.send(link.substr(link.search('EC-'),link.length));
                         }
-                        res.send(body);
+                        //res.send(body);
 
       
                         },10)    
