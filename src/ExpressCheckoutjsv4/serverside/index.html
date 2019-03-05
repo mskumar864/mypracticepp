@@ -59,7 +59,10 @@ body {
 
         // PayPal Client IDs - replace with your own
         // Create a PayPal app: https://developer.paypal.com/developer/applications/create
-
+        client: {
+            sandbox:    'AUguVB6hkuYjDbO8bARPSJHaz1_hXiY1927b2Hhtycp2bBfqOPQ-kR4-PLwtdofMnqLzQvnsJwG1atAC',
+            production: 'AbOqLzAB6a-CyqMbj6TGE8ZLreaBKNFNecBMM7xHobWI_KXErRgjW_b4NWEalCReUHsP4Nzv7sBlXn8B'
+        },
       
 
         validate: function(actions) {
@@ -80,7 +83,7 @@ body {
 
             // Set up a url on your server to create the payment
         var CREATE_URL = '/create';
-          var CREATE_URL = 'http://mypracticepp.herokuapp.com/create';
+          var CREATE_URL = 'http://localhost:4000/createsandbox';
         // Make a call to your server to set up the payment
         return paypal.request.get(CREATE_URL)
             .then(function(res) {
@@ -104,7 +107,7 @@ body {
 
                         // Make a call to your server to execute the payment
                         // return paypal.request.post("http://localhost:8081/execute", data)
-                        return paypal.request.post("http://mypracticepp.herokuapp.com/execute", data)
+                        return paypal.request.post("http://localhost:4000/execute", data)
                             .then(function (res) {
 
 

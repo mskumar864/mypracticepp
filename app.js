@@ -404,6 +404,154 @@ app.get('/create', function(req, res, next) {
     
     
 });
+app.get('/createsandbox', function(req, res, next) {
+
+    console.log("entering /accesstoken");
+    try{
+    var options = {
+        method: 'POST',
+        url: 'https://api.sandbox.paypal.com/v1/oauth2/token',
+        headers : {
+            'authorization': "Basic "+basicAuth,
+            'accept': "application/json",
+            'accept-language': "en_US",
+            'cache-control': "no-cache",
+            'content-type': "application/x-www-form-urlencoded",
+
+        },
+        body: 'grant_type=client_credentials&response_type=token&return_authn_schemes=true'
+
+    }
+        console.log("kumar");
+    request(options, function (error, response, body) {
+        console.log("Suresh");
+        if (error) {
+            console.log("error");
+            throw new Error(error);
+            return res.send(JSON.stringify(error));
+        }
+        else{
+            console.log(body);
+            accessToken=JSON.parse(body).access_token;
+           //res.send(JSON.parse(body).access_token);
+
+           try{
+
+            var payLoad = {
+                "intent": "sale",
+                "payer": {
+                    "payment_method": "paypal"
+                },
+                "transactions": [
+                    {
+                        "amount": {
+                            "total": "2.11",
+                            "currency": "USD",
+                            "details": {
+                                "subtotal": "2.00",
+                                "tax": "0.07",
+                                "shipping": "0.03",
+                                "handling_fee": "1.00",
+                                "shipping_discount": "-1.00",
+                                "insurance": "0.01"
+                            }
+                        },
+                        "description": "The payment transaction description.",
+                        "custom": "EBAY_EMS_90048630024435",
+                       // "invoice_number": "4878723231589673",
+                        "payment_options": {
+                            "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
+                        },
+                        "soft_descriptor": "ECHI5786786",
+                        "item_list": {
+                            "items": [
+                                {
+                                    "name": "hat",
+                                    "description": "Brown hat.",
+                                    "quantity": "1",
+                                    "price": "1",
+                                    "tax": "0.01",
+                                    "sku": "1",
+                                    "currency": "USD"
+                                },
+                                {
+                                    "name": "handbag",
+                                    "description": "Black handbag.",
+                                    "quantity": "1",
+                                    "price": "1",
+                                    "tax": "0.02",
+                                    "sku": "product34",
+                                    "currency": "USD"
+                                }
+                            ],
+                            "shipping_address": {
+                                "recipient_name": "Brian Robinson",
+                                "line1": "4th Floor",
+                                "line2": "Unit #34",
+                                "city": "San Jose",
+                                "country_code": "US",
+                                "postal_code": "95131",
+                                "phone": "011862212345678",
+                                "state": "CA"
+                            }
+                        }
+                    }
+                ],
+                "note_to_payer": "Contact us for any questions on your order.",
+                "redirect_urls": {
+                    "return_url": "https://google.com",
+                    "cancel_url": "https://example.com/cancel"
+                }
+            };
+            console.log("accessToken"+accessToken);
+             //   var accessToken = "A21AAF7IC5UlS3AwLBhTwSw3C-kafv70B5YGkxwApi4zDhF3Th6T7uxZBi4qD_be5YHQB51DNMQgYSms5bOSU8TszeRp0mMKQ";
+                var _dataToSend = {
+    
+                }
+    
+                var options = {
+                    method: 'POST',
+                    url: 'https://api.sandbox.paypal.com/v1/payments/payment',
+                    headers : {
+                        'content-type': "application/json",
+                        'authorization': "Bearer "+accessToken,
+                        'cache-control': "no-cache"
+    
+                    },
+                    body: payLoad,
+                    json:true
+    
+                }
+                request(options, function (error, response, body) {
+                    if (error) {
+                        console.log(error);
+                        throw new Error(error);
+                    }
+                    else{
+                      
+                        res.send(body);
+
+      
+                         
+                }
+                });
+    
+        }catch(e) {
+            console.log(e)
+        }
+
+        }
+    });
+
+}catch(e) {
+    console.log(e);
+        return res.send(JSON.stringify(e));
+}
+   
+
+    
+    
+});
 
 app.post('/execute', function(req, res, next) {
 
