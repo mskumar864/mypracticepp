@@ -292,10 +292,10 @@ app.get('/create', function(req, res, next) {
                 "transactions": [
                     {
                         "amount": {
-                            "total": "30.11",
+                            "total": "2.11",
                             "currency": "USD",
                             "details": {
-                                "subtotal": "30.00",
+                                "subtotal": "2.00",
                                 "tax": "0.07",
                                 "shipping": "0.03",
                                 "handling_fee": "1.00",
@@ -315,8 +315,8 @@ app.get('/create', function(req, res, next) {
                                 {
                                     "name": "hat",
                                     "description": "Brown hat.",
-                                    "quantity": "5",
-                                    "price": "3",
+                                    "quantity": "1",
+                                    "price": "1",
                                     "tax": "0.01",
                                     "sku": "1",
                                     "currency": "USD"
@@ -325,7 +325,7 @@ app.get('/create', function(req, res, next) {
                                     "name": "handbag",
                                     "description": "Black handbag.",
                                     "quantity": "1",
-                                    "price": "15",
+                                    "price": "1",
                                     "tax": "0.02",
                                     "sku": "product34",
                                     "currency": "USD"
@@ -371,15 +371,17 @@ app.get('/create', function(req, res, next) {
                 }
                 request(options, function (error, response, body) {
                     if (error) {
+                        console.log(error);
                         throw new Error(error);
                     }
                     else{
                         setTimeout(()=>{
-                           
+                            console.log(body);
+                           if(null!=body && null!=body.links){
                             var link=body.links[1].href;
                          res.send(link.substr(link.search('EC-'),link.length));
-                           
-                            //res.send(body);
+                        }
+                        res.send(body);
 
       
                         },10)    
