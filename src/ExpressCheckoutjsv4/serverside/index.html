@@ -5,71 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 </head>
+<style>
+    .hidden {
+    display: none;
+}
+.error {
+    color: red;
+}
+body {
+    width:100%;
+       text-align: center;
+}
+
+
+</style>
 
 <body>
+
+
+<p id="msg" class="hidden error">Please check the checkbox</p>
+
+<p>
+    <label><input id="check" type="checkbox"> Check here to continue</label>
+</p>
+
 <div id="paypal-button-container"></div>
 
 <script>
+
+    function isValid() {
+        return document.querySelector('#check').checked;
+    }
+
+    function onChangeCheckbox(handler) {
+        document.querySelector('#check').addEventListener('change', handler);
+    }
+
+    function toggleValidationMessage() {
+        document.querySelector('#msg').style.display = (isValid() ? 'none' : 'block');
+    }
+
+    function toggleButton(actions) {
+        return isValid() ? actions.enable() : actions.disable();
+    }
+
+    // Render the PayPal button
+
     paypal.Button.render({
 
-        env: 'sandbox', // sandbox | production
+        // Set your environment
 
-        // Show the buyer a 'Pay Now' button in the checkout flow
-        commit: false,
+        env: 'production', // sandbox | production
 
-        // payment() is called when the button is clicked
+        // PayPal Client IDs - replace with your own
+        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+
+        client: {
+            sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+            production: 'AbOqLzAB6a-CyqMbj6TGE8ZLreaBKNFNecBMM7xHobWI_KXErRgjW_b4NWEalCReUHsP4Nzv7sBlXn8B'
+        },
+
+        validate: function(actions) {
+            toggleButton(actions);
+
+            onChangeCheckbox(function() {
+                toggleButton(actions);
+            });
+        },
+
+        onClick: function() {
+            toggleValidationMessage();
+        },
+
+        // Wait for the PayPal button to be clicked
+
         payment: function() {
 
             // Set up a url on your server to create the payment
-         var CREATE_URL = 'http://localhost:8081/create';
-            //   var CREATE_URL = 'http://localhost:8080/createpayment';
-            // Make a call to your server to set up the payment
-            return paypal.request.get(CREATE_URL)
-                .then(function(res) {
+        var CREATE_URL = '/create';
+          var CREATE_URL = 'http://localhost:8081/create';
+        // Make a call to your server to set up the payment
+        return paypal.request.get(CREATE_URL)
+            .then(function(res) {
 
 
-                    return res.id;
-                });
+                 return res.id;
+            });
         },
 
-        // onAuthorize() is called when the buyer approves the payment
-        onAuthorize: function(data, actions) {
+                        onAuthorize: function(data, actions) {
 
-            // Set up a url on your server to execute the payment
-            var EXECUTE_URL = '/execute';
+                        // Set up a url on your server to execute the payment
+                        var EXECUTE_URL = '/execute';
 
-            // Set up the data you need to pass to your server
-            var data = {
-                paymentID: data.paymentID,
-                payerID: data.payerID
-            };
-            console.log("Console Data", data)
+                        // Set up the data you need to pass to your server
+                        var data = {
+                            paymentID: data.paymentID,
+                            payerID: data.payerID
+                        };
+                        console.log("Console Data", data)
 
-            // Make a call to your server to execute the payment
-           // return paypal.request.post("http://localhost:8081/execute", data)
-            return paypal.request.post("http://localhost:8080/execute", data)
-                .then(function (res) {
-
-
-                 alert('Payment Complete!');
+                        // Make a call to your server to execute the payment
+                        // return paypal.request.post("http://localhost:8081/execute", data)
+                        return paypal.request.post("http://localhost:8081/execute", data)
+                            .then(function (res) {
 
 
-              //     actions.redirect();
-                    //actions.redirect("/confirmation");
+                            alert('Payment Complete!');
 
-                });
-        },
-        onCancel: function(data, actions) {
-          console.log("cancelled");
-        },
 
-        onError: function(err) {
-            /*
-             * An error occurred during the transaction
-             */
-            console.log("error"+err);
-        }
+                        //     actions.redirect();
+                                //actions.redirect("/confirmation");
 
-    }, '#paypal-button-container');
+                            });
+                        },
+                        onCancel: function(data, actions) {
+                        console.log("cancelled");
+                        },
+
+                        onError: function(err) {
+                        /*
+                        * An error occurred during the transaction
+                        */
+                        console.log("error"+err.err);
+                       // window.location="https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-0T661788ME575401P";
+      
+                        
+                        }
+                    }, '#paypal-button-container');
 </script>
 </body>
+</html>

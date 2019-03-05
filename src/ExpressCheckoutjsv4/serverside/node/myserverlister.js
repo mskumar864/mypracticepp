@@ -3,8 +3,8 @@ var router = express.Router();
 var request = require("request");
 var cors = require("cors");
 var bodyParser = require('body-parser');
-var clientId = "AV2UJ4rXMH6vaJcJTUTJR4doweN1og37fTV6xTKIhEPqqmEU7ZuI_Kl86PeTm1EXf6CjdNEixjXmYM7v";
-var secret = "EM1PKF6OWi3lonGwnuCeK8LAfqFr6Rpqbbo-98Ed9hMzNNWOJAvtEMb46m9jVvHjNHKc7kcribk31NrM";
+var clientId = "AbOqLzAB6a-CyqMbj6TGE8ZLreaBKNFNecBMM7xHobWI_KXErRgjW_b4NWEalCReUHsP4Nzv7sBlXn8B";
+var secret = "EGIQtUQj-nGxOX5kQ2KNJoeHm7TSjvAVOOATVa_mQHHwrky3Q3wipUk9gyK-ayojyTTAbkdnvkl-gIKx";
 var app = express();
 var basicAuth = new Buffer(clientId+":"+secret).toString('base64') ;
 var accessToken="";
@@ -23,7 +23,7 @@ console.log("entering /accesstoken");
     try{
     var options = {
         method: 'POST',
-        url: 'https://api.sandbox.paypal.com/v1/oauth2/token',
+        url: 'https://api.paypal.com/v1/oauth2/token',
         headers : {
             'authorization': "Basic "+basicAuth,
             'accept': "application/json",
@@ -135,7 +135,7 @@ router.get('/create', function(req, res, next) {
 
             var options = {
                 method: 'POST',
-                url: 'https://api.sandbox.paypal.com/v1/payments/payment',
+                url: 'https://api.paypal.com/v1/payments/payment',
                 headers : {
                     'content-type': "application/json",
                     'authorization': "Bearer "+accessToken,
@@ -151,8 +151,10 @@ router.get('/create', function(req, res, next) {
                     throw new Error(error);
                 }
                 else{
-
-                    res.send(body);
+                    setTimeout(()=>{
+                        res.send(body);
+  
+                    },60000)    
             }
             });
 
@@ -174,7 +176,7 @@ console.log(payLoad);
             }
             var options = {
                 method: 'POST',
-                url:  "https://api.sandbox.paypal.com/v1/payments/payment/{payment_id}/execute/".replace('{payment_id}', payLoad.paymentID),
+                url:  "https://api.paypal.com/v1/payments/payment/{payment_id}/execute/".replace('{payment_id}', payLoad.paymentID),
                 headers : {
                     'content-type': "application/json",
                     'authorization': "Bearer "+accessToken,
@@ -243,9 +245,143 @@ router.post("/phpexecute",function(request,response){
     response.end();
 })
 
+
+var initialize = function(req) {  
+
+    var clientId =  "AY5u6ALS8wSiidBDeDC2d07hxdzv__YgXiO8I_l_U1E0wZ3rx4oUqSvpPZiFgbSTTie_OmC-kqSAgvFv";
+    var clientSecret = "EDfBd2q4tdWg7zyE5UXoGVh9G6LabjDo_qo9Rb9g-kA5J8QUpK3vCRM9A7TuvLvZgZ5u8WOEUjeQy-vs";
+  
+  
+    const AUTH = new Buffer(clientId + ':' + clientSecret).toString('base64');
+    
+    const options = {
+      uri: 'https://api.sandbox.paypal.com'+'/v1/oauth2/token',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic '+AUTH
+          },
+        form: { grant_type: 'client_credentials' } };
+    
+    return new Promise(function(resolve, reject) {
+      request(options, function (err, response) {
+        if (err) {
+            console.error('error in accestoken ',err);
+            reject(err);
+        }
+      
+        var access_token = JSON.parse(response.body).access_token; 
+        console.log('token ',access_token);
+        resolve(access_token);
+      });
+    });
+  
+}
+
+// create agreement token
+router.post('/create-agreement-token', function(req, res){
+    try {
+
+    console.log("create agreement token");
+  
+    var options = {
+        uri: 'https://api.sandbox.paypal.com' + '/v1/billing-agreements/agreement-tokens',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: {
+            "description": "RDP Billing Agreement",
+            "shipping_address":
+            {
+                "line1": "1350 North First Street",
+                "city": "San Jose",
+                "state": "CA",
+                "postal_code": "95112",
+                "country_code": "US",
+                "recipient_name": "John Doe"
+            },
+            "payer":
+            {
+                "payment_method": "PAYPAL"
+            },
+            "plan":
+            {
+                "type": "CHANNEL_INITIATED_BILLING",
+                "merchant_preferences":
+                {
+                    "return_url": "https://amazon.com/",
+                    "cancel_url": "https://amazon.com/",
+                    "notify_url": "https://amazon.com/",
+                    "accepted_pymt_type": "INSTANT",
+                    "skip_shipping_address": false,
+                    "immutable_shipping_address": true
+                }
+            }
+        },
+        json: true
+            
+    };
+
+    initialize(req).then(function(access_token){
+        options.headers.Authorization = 'Bearer '+access_token;
+        request(options, function (err, response) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            }
+            res.json(response.body);
+        });
+    }).catch(e=> res.status(500).json(e));
+} catch(e) {
+    console.log(e);
+    res.status(500).json(e)
+}
+});
+
+
+  // create agreement
+  router.post('/create-agreement', function(req, res){
+    try {
+
+    console.log("create agreement");
+  
+    var options = {
+        uri: 'https://api.sandbox.paypal.com' + '/v1/billing-agreements/agreements',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: {
+            "token_id": req.body.token
+        },
+        json: true
+            
+    };
+
+    initialize(req).then(function(access_token){
+        options.headers.Authorization = 'Bearer '+access_token;
+        request(options, function (err, response) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            }
+            console.log(response.body);
+            res.json(response.body);
+        });
+    }).catch(e=> res.status(500).json(e));
+} catch(e) {
+    console.log(e);
+    res.status(500).json(e)
+}
+});
+
+
 app.listen(8081,function(){
     console.log("listening on 8081");
 })
+
+
 
 app.use(router);
 
