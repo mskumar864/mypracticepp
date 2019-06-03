@@ -1,6 +1,6 @@
 <html>
 <head><title>demo</title>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+      
 </head>
 <body>
 
@@ -13,12 +13,12 @@
         console.log("doing vada");
    var url_string =  window.location.href;
 var url = new URL(url_string);
-var paymentID = url.searchParams.get("paymentID");
+var token = url.searchParams.get("token");
 var PayerID=url.searchParams.get("PayerID");
 
 
     console.log("url_string"+url_string);
- window.location="app://com.herokuapp.apmanative.androidecorderv2cct";
+ window.location="app://com.herokuapp.apmanative.androidecorderv2cct?token="+token+"&PayerID="+PayerID;
  //window.location="app://org.chromium.customtabsdemos?paymentID="+paymentID+"&PayerID="+PayerID;
 //}
 /*
