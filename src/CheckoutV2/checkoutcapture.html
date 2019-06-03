@@ -39,74 +39,32 @@
 
 
     // payment() is called when the button is clicked
-    payment: function(data, actions) {
-      // Make a call to the REST API to create the payment
-      return actions.order.create({
-        order: {
-          "intent": "CAPTURE",
-          "purchase_units": [
-          {
-            "amount": {
-              "currency_code": "USD",
-              "value": "10.00",
-              "breakdown": {
-                "item_total": {
-                  "currency_code": "USD",
-                  "value": "8.00"
-                },
-                "shipping": {
-                  "currency_code": "USD",
-                  "value": "1.00"
-                },
-                "handling": {
-                  "currency_code": "USD",
-                  "value": "1.00"
-                },
-                "tax_total": {
-                  "currency_code": "USD",
-                  "value": "1.00"
-                },
-                "shipping_discount": {
-                  "currency_code": "USD",
-                  "value": "1.00"
-                }
-              }
-            },
-            "items": [
-            {
-              "name": "T-Shirt",
-              "description": "Green XL",
-              "sku": "sku01",
-              "unit_amount": {
-                "currency_code": "USD",
-                "value": "4.00"
-              },
-              "tax": {
-                "currency_code": "USD",
-                "value": "0.5"
-              },
-              "quantity": "1",
-              "category": "PHYSICAL_GOODS"
-            },
-            {
-              "name": "Shoes",
-              "description": "Running, Size 10.5",
-              "sku": "sku02",
-              "unit_amount": {
-                "currency_code": "USD",
-                "value": "4.00"
-              },
-              "tax": {
-                "currency_code": "USD",
-                "value": "0.5"
-              },
-              "quantity": "1",
-              "category": "PHYSICAL_GOODS"
-            }]
-          }]
-        }
-      });
-    },
+    createOrder: function(data, actions) {
+          // Replace your create order server url below
+          return fetch("http://google.com:",{
+                      method: 'POST',
+                       headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json'
+                          },
+                       body: JSON.stringify({
+                           "intent": "CAPTURE",
+                           "application_context": {
+                               "shipping_preference": "GET_FROM_FILE"
+                           },
+                           "purchase_units": [
+                               {
+                                   "amount": {
+                                       "value": "1.10",
+                                       "currency_code": "INR"
+                                   }
+                               }
+                           ]
+                       })
+           })
+           .then(res=>res.json())
+           .then(data => data.id)
+       },
     // onAuthorize() is called when the customer approves the payment
     onAuthorize: function(data, actions) {
       // Make a call to the REST api to execute the payment

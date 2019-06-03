@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
   //console.log(token);
 
   var token = jwt.sign({"iss": "AU4kkD6HuzjSwSkixUsqtYGnKY8bO_jIZHD4aXzBToRLxc6hjnFSbem0sNkSdY5QLBvREwDvKarxd37x",
-  "email":"inbuyer1@test.com"},null, { algorithm: 'none' });
+  "email":"usbuyer1@test.com"},null, { algorithm: 'HS256' });
   console.log(token);
 
   jwt.verify(token, null, { algorithm: 'none' },function(err, decoded) {

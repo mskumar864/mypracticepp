@@ -4,21 +4,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <script
-    src="https://www.paypal.com/sdk/js?client-id=ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X&env=sandbox">
+    src="https://www.paypal.com/sdk/js?client-id=ATw1eNq5AcWFqGL9wuv4OJM8yOey5es0ehS8ahucFiw14yBk1S1QXxlg3Bcz3Fumyj98gxRwWx65A14X&currency=USD">
   </script>
 </head>
-
+<body>
+  <div id="paypal-button-container"></div>
 <script>
     paypal.Buttons({
       createOrder: function(data, actions) {
-        return actions.order.create({
-          purchase_units: [{
-            amount: {
-              value: '0.01'
-            }
-          }]
-        });
-      },
+          // Replace your create order server url below
+          return fetch("server url for Create Order API>",{
+                      method: 'POST',
+                       headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json'
+                          },
+                       body: JSON.stringify({
+                           "intent": "CAPTURE",
+                           "application_context": {
+                               "shipping_preference": "GET_FROM_FILE"
+                           },
+                           "purchase_units": [
+                               {
+                                   "amount": {
+                                       "value": "1.10",
+                                       "currency_code": "INR"
+                                   }
+                               }
+                           ]
+                       })
+           })
+           .then(res=>res.json())
+         .then(data => data.id)
+          .catch(function (err) { console.log("suresh fd kumar "); throw err; });
+       },
+
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
           alert('Transaction completed by ' + details.payer.name.given_name);
@@ -30,6 +50,9 @@
             })
           });
         });
-      }
+      },
+
     }).render('#paypal-button-container');
   </script>
+</body>
+  </html>

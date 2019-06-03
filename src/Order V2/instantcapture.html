@@ -1,0 +1,66 @@
+<html>
+<head>
+  <script src="https://www.paypal.com/sdk/js?client-id=AcuuDiWgApKeQx7oY6wuGh2kbAIzy8B1NrruTzVl_vn3Dqv7a-EYGKlHRMb70fjc3eX3EP5rlM3VUp8g&locale=en_IN&currency=INR"></script>
+</head>
+
+<body>
+
+<div id="paypal-button-container"></div>
+
+<script>
+   // Render the PayPal button
+   paypal.Buttons({
+       // Specify the style of the button
+       style: {
+           color:'gold',
+           layout:'vertical',
+           shape:'rect',
+           label:'checkout',
+       },
+       // Wait for the PayPal button to be clicked
+       createOrder: function(data, actions) {
+          // Replace your create order server url below
+          return fetch("http://google.com:",{
+                      method: 'POST',
+                       headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json'
+                          },
+                       body: JSON.stringify({
+                           "intent": "CAPTURE",
+                           "application_context": {
+                               "shipping_preference": "GET_FROM_FILE"
+                           },
+                           "purchase_units": [
+                               {
+                                   "amount": {
+                                       "value": "1.10",
+                                       "currency_code": "INR"
+                                   }
+                               }
+                           ]
+                       })
+           })
+           .then(res=>res.json())
+           .then(data => data.id)
+       },
+     // Wait for the payment to be authorized by the customer
+       onApprove: function(data, actions) {
+          // Replace your capture order server url below
+           return fetch('http://google.com:'+data.orderID,{
+                       method: 'POST',
+                       headers: {
+                           'Accept': 'application/json',
+                           'Content-Type': 'application/json'
+                       }
+               }).then(res=>res.json());
+           }).then(function(result){
+              console.log('payment done - result ', result);
+               alert('Payment Successful')
+          })
+       }
+   }).render('#paypal-button-container');
+</script>
+
+</body>
+</html>
