@@ -16,15 +16,7 @@
     ["7C:A5:89:24:FA:1E:92:0E:C2:CB:20:3F:05:E2:4E:C2:14:C0:FF:4E:1E:33:C3:0B:35:5A:99:AA:5D:C7:AE:EE"]
   }
  },
- {
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.herokuapp.apmanative.androidecorderv2cct",
-    "sha256_cert_fingerprints":
-    ["CF:BC:9C:44:E9:0B:11:6A:63:AB:2C:89:0F:25:88:B3:A5:E9:3F:A8:5A:B0:EC:B7:8A:14:CE:75:B2:0D:90:EE"]
-  }
-},
+
 {
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
